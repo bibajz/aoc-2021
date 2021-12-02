@@ -2,6 +2,7 @@
 
 (provide load-and-split
          accumulate
+	 accumulate-right
          sum
          sliding-window)
 
@@ -14,6 +15,14 @@
       [(null? l) acc]
       [else (inner (cdr l) (fn acc (car l)))]))
   (inner lst init))
+
+(define (accumulate-right fn lst init)
+  (define (inner l acc)
+    (cond
+      [(null? l) acc]
+      [else (inner (cdr l) (fn (car l) acc))]))
+  (inner lst init))
+
 
 (define (sum lst)
   (accumulate + lst 0))
