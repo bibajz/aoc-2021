@@ -4,7 +4,9 @@
          accumulate
 	 accumulate-right
          sum
-         sliding-window)
+         sliding-window
+	 average
+	 transpose)
 
 (define (load-and-split path)
   (file->lines path))
@@ -37,3 +39,12 @@
             (inner (cdr old) (append new (list buffer)) (append (cdr buffer) (list (car old))))
             (inner (cdr old) new (append buffer (list (car old)))))))
   (inner lst '() '()))
+
+(define (average lst)
+  (/ (* 1.0 (sum lst)) (length lst)))
+
+(define (pairwise-list lst1 lst2)
+  (if (null? lst1) (map list lst2) (map (lambda (l1 l2) (append l1 (list l2))) lst1 lst2)))
+
+(define (transpose list-of-lists)
+  (accumulate pairwise-list list-of-lists '()))
