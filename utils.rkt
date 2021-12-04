@@ -6,7 +6,9 @@
          sum
          sliding-window
 	 average
-	 transpose)
+	 transpose
+	 tumbling-window
+	 in-matrix-2d)
 
 (define (load-and-split path)
   (file->lines path))
@@ -48,3 +50,17 @@
 
 (define (transpose list-of-lists)
   (accumulate pairwise-list list-of-lists '()))
+
+(define (tumbling-window n lst)
+  (define (inner old new buffer)
+    (if (null? old)
+        (append new (list buffer))
+        (if (= (length buffer) n)
+            (inner old (append new (list buffer)) '())
+            (inner (cdr old) new (append buffer (list (car old)))))))
+  (inner lst '() '()))
+
+; Returns #t if a number is not in a matrix, its position otherwise
+(define (in-matrix-2d matrix num)
+  (let ([row (index-where (map (lambda (l) (index-of l num)) matrix) number?)])
+    (cons num (if row (cons row (index-of (list-ref matrix row) num)) row))))
