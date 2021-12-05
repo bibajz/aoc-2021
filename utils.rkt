@@ -8,7 +8,9 @@
 	 average
 	 transpose
 	 tumbling-window
-	 in-matrix-2d)
+	 in-matrix-2d
+	 zip
+	 flatten-1)
 
 (define (load-and-split path)
   (file->lines path))
@@ -64,3 +66,12 @@
 (define (in-matrix-2d matrix num)
   (let ([row (index-where (map (lambda (l) (index-of l num)) matrix) number?)])
     (cons num (if row (cons row (index-of (list-ref matrix row) num)) row))))
+
+(define (zip lst1 lst2)
+  (if (or (null? lst1) (null? lst2))
+      '()
+      (append (list (list (car lst1) (car lst2))) (zip (cdr lst1) (cdr lst2)))))
+
+; Unfolds only the first level of nesting, unline flatten, which does flatten arbitralily deep
+(define (flatten-1 list-of-lists)
+  (if (null? list-of-lists) '() (append (car list-of-lists) (flatten-1 (cdr list-of-lists)))))
