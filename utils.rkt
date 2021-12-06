@@ -2,15 +2,17 @@
 
 (provide load-and-split
          accumulate
-	 accumulate-right
+         accumulate-right
          sum
          sliding-window
-	 average
-	 transpose
-	 tumbling-window
-	 in-matrix-2d
-	 zip
-	 flatten-1)
+         average
+         transpose
+         tumbling-window
+         in-matrix-2d
+         zip
+         flatten-1
+         group-by-hash
+         accumulate-by-hash)
 
 (define (load-and-split path)
   (file->lines path))
@@ -28,7 +30,6 @@
       [(null? l) acc]
       [else (inner (cdr l) (fn (car l) acc))]))
   (inner lst init))
-
 
 (define (sum lst)
   (accumulate + lst 0))
@@ -75,3 +76,14 @@
 ; Unfolds only the first level of nesting, unline flatten, which does flatten arbitralily deep
 (define (flatten-1 list-of-lists)
   (if (null? list-of-lists) '() (append (car list-of-lists) (flatten-1 (cdr list-of-lists)))))
+
+(define (group-by-hash grouping-fn lst)
+
+  (for/hash ([group (group-by grouping-fn lst)])
+    (values (car group) group)))
+
+; TODO: How can I destructure a tuple, thus avoiding the `key+group` ???
+(define (accumulate-by-hash grouping-fn accumulate-fn lst)
+
+  (for/hash ([key+group (hash->list (group-by-hash grouping-fn lst))])
+    (values (car key+group) (accumulate-fn (cdr key+group)))))
