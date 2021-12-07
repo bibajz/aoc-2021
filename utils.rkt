@@ -12,7 +12,9 @@
          zip
          flatten-1
          group-by-hash
-         accumulate-by-hash)
+         accumulate-by-hash
+         min-list
+         max-list)
 
 (define (load-and-split path)
   (file->lines path))
@@ -87,3 +89,8 @@
 
   (for/hash ([key+group (hash->list (group-by-hash grouping-fn lst))])
     (values (car key+group) (accumulate-fn (cdr key+group)))))
+
+(define (max-list lst)
+  (accumulate max (cdr lst) (car lst)))
+(define (min-list lst)
+  (accumulate min (cdr lst) (car lst)))
