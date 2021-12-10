@@ -4,7 +4,7 @@
          accumulate
          accumulate-right
          sum
-	 prod
+         prod
          sliding-window
          average
          transpose
@@ -16,10 +16,11 @@
          accumulate-by-hash
          min-list
          max-list
-	 string-intersect
-	 inverse-map
-	 power-range
-	 scalar-product)
+         string-intersect
+         inverse-map
+         power-range
+         scalar-product
+         without-last)
 
 (define (load-and-split path)
   (file->lines path))
@@ -100,18 +101,15 @@
 (define (min-list lst)
   (accumulate min (cdr lst) (car lst)))
 
-
 (define (string-contains-char? str c)
   (string-contains? str (string c)))
 
 (define (string-intersect s1 s2)
   (list->string (filter (lambda (c) (string-contains-char? s2 c)) (string->list s1))))
 
-
 (define (inverse-map h)
   (make-immutable-hash (for/list ([(k-v) (hash->list h)])
                          (cons (cdr k-v) (car k-v)))))
-
 
 (define (power-range base start stop step)
   (for/list ([i (inclusive-range start stop step)])
@@ -119,3 +117,6 @@
 
 (define (scalar-product list1 list2)
   (sum (map prod (zip list1 list2))))
+
+(define (without-last lst)
+  (reverse (cdr (reverse lst))))
