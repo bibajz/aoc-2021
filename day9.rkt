@@ -10,8 +10,6 @@
 (define num-col (length (car input)))
 (define num-row (length input))
 
-(define (2d-ref list-of-lists row-column)
-  (list-ref (list-ref list-of-lists (car row-column)) (cdr row-column)))
 
 (define (adjacent row-column)
   (list (cons (- (car row-column) 1) (cdr row-column))
@@ -24,9 +22,6 @@
             (and (and (>= (car pos) 0) (< (car pos) num-rows))
                  (and (>= (cdr pos) 0) (< (cdr pos) num-columns))))
           (adjacent row-column)))
-
-(define (create-matrix num-rows num-cols)
-  (for/list ([two-list (cartesian-product (range num-rows) (range num-cols))]) (cons (car two-list) (cadr two-list))))
 
 
 (define (pred-all lst el pred-fn)

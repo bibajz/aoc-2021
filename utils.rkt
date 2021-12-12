@@ -20,7 +20,13 @@
          inverse-map
          power-range
          scalar-product
-         without-last)
+         without-last
+	 nested-map
+	 2d-ref
+	 create-matrix
+	 2d-list-set
+	 2d-list-update
+	 batch-2d-list-update)
 
 (define (load-and-split path)
   (file->lines path))
@@ -120,3 +126,28 @@
 
 (define (without-last lst)
   (reverse (cdr (reverse lst))))
+
+(define (nested-map fn list-of-lists)
+  (map (lambda (lst) (map fn lst)) list-of-lists))
+
+(define (2d-ref list-of-lists row-column)
+  (list-ref (list-ref list-of-lists (car row-column)) (cdr row-column)))
+
+(define (create-matrix num-rows num-cols)
+  (for/list ([two-list (cartesian-product (range num-rows) (range num-cols))])
+    (cons (car two-list) (cadr two-list))))
+
+(define (2d-list-set list-of-lists pos value)
+  (list-set list-of-lists (car pos) (list-set (list-ref list-of-lists (car pos)) (cdr pos) value)))
+
+(define (2d-list-update list-of-lists pos updater)
+  (list-set list-of-lists
+            (car pos)
+            (list-update (list-ref list-of-lists (car pos)) (cdr pos) updater)))
+
+(define (batch-2d-list-update list-of-lists positions updater)
+  (if (null? positions)
+      list-of-lists
+      (batch-2d-list-update (2d-list-update list-of-lists (car positions) updater)
+                            (cdr positions)
+                            updater)))
