@@ -21,12 +21,14 @@
          power-range
          scalar-product
          without-last
-	 nested-map
-	 2d-ref
-	 create-matrix
-	 2d-list-set
-	 2d-list-update
-	 batch-2d-list-update)
+         nested-map
+         2d-ref
+         create-matrix
+         2d-list-set
+         2d-list-update
+         batch-2d-list-update
+         evolve
+         make-2d-list)
 
 (define (load-and-split path)
   (file->lines path))
@@ -151,3 +153,9 @@
       (batch-2d-list-update (2d-list-update list-of-lists (car positions) updater)
                             (cdr positions)
                             updater)))
+
+(define (evolve fns arg)
+  (if (null? fns) arg (evolve (cdr fns) ((car fns) arg))))
+
+(define (make-2d-list num-row num-column v)
+  (make-list num-row (make-list num-column v)))
