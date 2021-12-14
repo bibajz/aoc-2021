@@ -28,7 +28,9 @@
          2d-list-update
          batch-2d-list-update
          evolve
-         make-2d-list)
+         make-2d-list
+         interleave
+         counter)
 
 (define (load-and-split path)
   (file->lines path))
@@ -159,3 +161,16 @@
 
 (define (make-2d-list num-row num-column v)
   (make-list num-row (make-list num-column v)))
+
+(define (interleave lst1 lst2)
+  (define (inner result l1 l2 take-from-first?)
+    (if (null? l1)
+        result
+        (if take-from-first?
+            (inner (append result (list (car l1))) (cdr l1) l2 #f)
+            (inner (append result (list (car l2))) l1 (cdr l2) #t))))
+  (inner '() lst1 lst2 #t))
+
+(define (counter lst)
+  (for/hash ([group (group-by (lambda (x) x) lst)])
+    (values (car group) (length group))))
